@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Examix — платформа для подготовки школьников Беларуси к выпускному экзамену по русскому языку после 11 класса."
+    />
+    <title>Examix — подготовка к экзамену по русскому языку</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f8fafc;
+        --surface: rgba(255, 255, 255, 0.86);
+        --text: #0f172a;
+        --muted: #64748b;
+        --primary: #635bff;
+        --primary-dark: #4f46e5;
+        --accent: #06b6d4;
+        --border: rgba(15, 23, 42, 0.1);
+        --shadow: 0 24px 80px rgba(79, 70, 229, 0.16);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #050816;
+          --surface: rgba(15, 23, 42, 0.82);
+          --text: #e2e8f0;
+          --muted: #94a3b8;
+          --border: rgba(226, 232, 240, 0.12);
+          --shadow: 0 24px 80px rgba(99, 91, 255, 0.24);
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(99, 91, 255, 0.22), transparent 34rem),
+          radial-gradient(circle at top right, rgba(6, 182, 212, 0.18), transparent 30rem),
+          linear-gradient(var(--border) 1px, transparent 1px),
+          linear-gradient(90deg, var(--border) 1px, transparent 1px),
+          var(--bg);
+        background-size: auto, auto, 44px 44px, 44px 44px, auto;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(1160px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(18px);
+        background: color-mix(in srgb, var(--bg) 82%, transparent);
+      }
+
+      .nav {
+        display: flex;
+        min-height: 72px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 42px;
+        height: 42px;
+        place-items: center;
+        border-radius: 15px;
+        color: white;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        box-shadow: var(--shadow);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 18px;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        font-weight: 700;
+        transition:
+          transform 0.18s ease,
+          border-color 0.18s ease,
+          background 0.18s ease;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+      }
+
+      .button-primary {
+        color: #fff;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        box-shadow: var(--shadow);
+      }
+
+      .button-secondary {
+        border-color: var(--border);
+        background: var(--surface);
+      }
+
+      .hero {
+        padding: 92px 0 56px;
+        text-align: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        margin-bottom: 24px;
+        padding: 9px 14px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: var(--muted);
+        background: var(--surface);
+        font-size: 14px;
+      }
+
+      h1 {
+        max-width: 900px;
+        margin: 0 auto;
+        font-size: clamp(44px, 8vw, 86px);
+        line-height: 0.96;
+        letter-spacing: -0.075em;
+      }
+
+      .lead {
+        max-width: 720px;
+        margin: 28px auto 0;
+        color: var(--muted);
+        font-size: clamp(18px, 2.5vw, 22px);
+        line-height: 1.65;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 34px;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        padding: 28px 0 76px;
+      }
+
+      .card,
+      .panel {
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        background: var(--surface);
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+        backdrop-filter: blur(18px);
+      }
+
+      .card {
+        padding: 24px;
+      }
+
+      .card-icon {
+        display: grid;
+        width: 46px;
+        height: 46px;
+        margin-bottom: 18px;
+        place-items: center;
+        border-radius: 16px;
+        color: white;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+      }
+
+      .card h2 {
+        margin: 0 0 10px;
+        font-size: 20px;
+        letter-spacing: -0.035em;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        padding-bottom: 92px;
+      }
+
+      .panel {
+        padding: 30px;
+      }
+
+      .panel h2 {
+        margin: 0 0 14px;
+        font-size: 32px;
+        letter-spacing: -0.05em;
+      }
+
+      .list {
+        display: grid;
+        gap: 12px;
+        margin: 20px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .list li {
+        display: flex;
+        gap: 10px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .list li::before {
+        content: "✓";
+        color: var(--accent);
+        font-weight: 900;
+      }
+
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 28px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .nav-links {
+          display: none;
+        }
+
+        .cards,
+        .split {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          padding-top: 68px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <nav class="container nav" aria-label="Основная навигация">
+        <a class="brand" href="/" aria-label="Examix">
+          <span class="brand-mark">Э</span>
+          <span>Examix</span>
+        </a>
+        <div class="nav-links">
+          <a href="/practice">Тренировка</a>
+          <a href="/exam">Экзамен</a>
+          <a href="/lobby">Лобби</a>
+          <a href="/leaderboard">Рейтинг</a>
+        </div>
+        <a class="button button-secondary" href="/auth">Войти</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="container hero">
+        <span class="eyebrow">Беларусь · русский язык · 11 класс</span>
+        <h1>Подготовка к выпускному экзамену в одном сервисе</h1>
+        <p class="lead">
+          Examix объединяет тренировки по заданиям, полную симуляцию экзамена, подробный разбор ошибок,
+          прогресс ученика и групповые занятия через realtime-лобби для класса.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="/dashboard">Начать подготовку</a>
+          <a class="button button-secondary" href="/lobby">Создать лобби</a>
+        </div>
+      </section>
+
+      <section class="container cards" aria-label="Ключевые возможности">
+        <article class="card">
+          <div class="card-icon">01</div>
+          <h2>Тренировка</h2>
+          <p>Выбор номера задания, сложности, количества вопросов, мгновенная проверка и объяснение решения.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">02</div>
+          <h2>Полный экзамен</h2>
+          <p>Случайный вариант по структуре экзамена, таймер, итоговый балл, проценты и статистика по разделам.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">03</div>
+          <h2>Лобби</h2>
+          <p>Комнаты по коду, синхронный старт, настройки в JSON, Supabase Realtime и таблица результатов.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">04</div>
+          <h2>Прогресс</h2>
+          <p>История попыток, streak активности, повторение ошибок, избранные задания и рекомендации слабых тем.</p>
+        </article>
+      </section>
+
+      <section class="container split">
+        <article class="panel">
+          <h2>Для ученика</h2>
+          <p class="lead" style="margin: 0; font-size: 17px">
+            Индивидуальный маршрут подготовки помогает понять, какие темы уже освоены, а какие стоит повторить.
+          </p>
+          <ul class="list">
+            <li>Тренировки по заданиям А, заданиям по тексту и части Б.</li>
+            <li>Сохранение ответов, ошибок и времени выполнения.</li>
+            <li>Персональная аналитика и рекомендации.</li>
+          </ul>
+        </article>
+        <article class="panel">
+          <h2>Для учителя</h2>
+          <p class="lead" style="margin: 0; font-size: 17px">
+            Групповой режим превращает платформу в инструмент для урока, консультации или контрольной подготовки.
+          </p>
+          <ul class="list">
+            <li>Создание лобби и настройка режима экзамена или тренировки.</li>
+            <li>Подключение учеников по коду и единый старт.</li>
+            <li>Рейтинг класса и результаты участников после завершения.</li>
+          </ul>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">© 2026 Examix. Образовательная платформа для подготовки к экзамену по русскому языку.</div>
+    </footer>
+  </body>
+</html>
