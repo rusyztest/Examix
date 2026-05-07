@@ -1,0 +1,6 @@
+"use client";
+import * as React from "react";
+
+export function Toaster() {
+  return <div id="toast-root" aria-live="polite" className="fixed bottom-4 right-4 z-50" />;
+}
