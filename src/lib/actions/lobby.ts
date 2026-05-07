@@ -50,6 +50,11 @@ export async function joinLobby(code: string) {
   redirect(`/lobby/${code.toUpperCase()}`);
 }
 
+export async function joinLobbyFromForm(formData: FormData) {
+  const code = z.string().min(4).max(12).parse(formData.get("code"));
+  return joinLobby(code);
+}
+
 export async function startLobby(lobbyId: string) {
   const supabase = await createClient();
   const { error } = await supabase.from("lobbies").update({ started: true }).eq("id", lobbyId);

@@ -18,6 +18,15 @@ export function ExamRunner({ tasks, seconds = 90 * 60 }: { tasks: Task[]; second
   const checked = useMemo(() => tasks.map((item) => checkAnswer(item, answers[item.id] ?? "")), [answers, tasks]);
   const stats = calculateScore(checked.map((item) => ({ correct: item.correct })));
 
+  if (!task) {
+    return (
+      <Card>
+        <CardHeader><CardTitle>Задания пока не найдены</CardTitle></CardHeader>
+        <CardContent className="text-sm text-muted-foreground">Добавьте задания в Supabase-таблицу tasks или выполните seed.sql.</CardContent>
+      </Card>
+    );
+  }
+
   if (finished) {
     return (
       <Card>
