@@ -43,12 +43,22 @@ npm run dev
 
 Затем откройте `http://localhost:3000`.
 
+Для подключения проекта создайте `.env.local` и вставьте свои значения Supabase:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+Не коммитьте `.env.local`: файл уже исключен через `.gitignore`.
+
 ## Supabase
 
 1. Создайте проект Supabase.
 2. Выполните `supabase/schema.sql` в SQL editor.
 3. Выполните `supabase/seed.sql` для демо-банка заданий.
-4. Добавьте переменные окружения из `.env.example`.
+4. Добавьте переменные окружения из `.env.example`: `NEXT_PUBLIC_SUPABASE_URL` и `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 5. Включите Anonymous sign-ins в Authentication → Providers, чтобы пользователи могли входить без почты и пароля.
 
 `schema.sql` и `seed.sql` сделаны идемпотентными: их можно запускать повторно в SQL Editor. Если раньше вы уже получили ошибку `type "user_role" already exists`, просто замените SQL на актуальную версию из репозитория и запустите `schema.sql` еще раз — новые `do $$ ... if not exists ... $$` блоки пропустят уже созданные enum-типы, таблицы, политики и realtime-публикации.
