@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   BarChart3,
-  BookMarked,
   BookOpenCheck,
   ClipboardCheck,
   FileText,
@@ -22,9 +21,9 @@ import { Progress } from "@/components/ui/progress";
 
 const primaryFlows: LinkCardItem[] = [
   {
-    href: "/practice",
+    href: "/practice/a1",
     icon: BookOpenCheck,
-    title: "Тренировка",
+    title: "А1 тренировка",
     description: "Выбор номера задания, сложности и количества вопросов с мгновенной проверкой."
   },
   {

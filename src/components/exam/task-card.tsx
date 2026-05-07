@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 export function TaskCard({ task, instant = true }: { task: Task; instant?: boolean }) {
   const [answer, setAnswer] = useState("");
   const [result, setResult] = useState<ReturnType<typeof checkAnswer> | null>(null);
+  const isMultiple = task.type === "multiple";
 
   return (
     <Card className="overflow-hidden">
@@ -22,12 +23,18 @@ export function TaskCard({ task, instant = true }: { task: Task; instant?: boole
           <Badge>{task.difficulty}</Badge>
         </div>
         <CardTitle>{task.topic}</CardTitle>
-        <CardDescription>{task.texts?.title ? `${task.texts.title}: ${task.texts.content}` : "Короткий ответ без пробелов и лишних символов"}</CardDescription>
+        <CardDescription>
+          {task.texts?.title
+            ? `${task.texts.title}: ${task.texts.content}`
+            : isMultiple
+              ? "Введите номера всех правильных вариантов через запятую, пробел или подряд: например 2,3,4"
+              : "Короткий ответ без пробелов и лишних символов"}
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-base leading-7">{task.question}</p>
+        <div className="whitespace-pre-line text-base leading-7">{task.question}</div>
         <div className="flex flex-col gap-3 sm:flex-row">
-          <Input value={answer} onChange={(event) => setAnswer(event.target.value)} placeholder="Введите ответ" />
+          <Input value={answer} onChange={(event) => setAnswer(event.target.value)} placeholder={isMultiple ? "Например: 2,3,4" : "Введите ответ"} />
           <Button onClick={() => setResult(checkAnswer(task, answer))} disabled={!answer}>Проверить</Button>
         </div>
         {instant && result ? (

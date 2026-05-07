@@ -14,6 +14,9 @@ export default async function PracticePage() {
     <PageShell title="Режим тренировки" description="Отрабатывайте конкретные типы заданий, получайте мгновенную проверку и объяснения.">
       <Card className="mb-6 animate-fade-up">
         <CardContent className="grid gap-3 pt-6 md:grid-cols-5">
+          <Button variant="outline" asChild>
+            <Link href="/practice/a1">А1: буквы А/О</Link>
+          </Button>
           {taskNumbers.map((number) => (
             <Button key={number} variant="outline" asChild>
               <Link href={`/practice/${number}`}>Задание {number}</Link>

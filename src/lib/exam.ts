@@ -19,10 +19,30 @@ export function normalizeAnswer(answer: string) {
   return answer.trim().replace(/ё/g, "е").replace(/\s+/g, " ").toLowerCase();
 }
 
+export function normalizeChoiceAnswer(answer: string) {
+  const compact = answer.replace(/\D/g, "");
+  const items = compact.length > 1 && !answer.match(/[,.;|\s]/)
+    ? compact.split("")
+    : answer
+        .replace(/[;|]/g, ",")
+        .split(/[,\.\s]+/)
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+  return Array.from(new Set(items)).sort((a, b) => a.localeCompare(b, "ru")).join(",");
+}
+
 export function checkAnswer(task: Task, userAnswer: string): CheckedAnswer {
   const correctAnswers = (task.answers ?? []).filter((answer) => answer.is_correct);
   const normalizedUserAnswer = normalizeAnswer(userAnswer);
-  const correct = correctAnswers.some((answer) => normalizeAnswer(answer.answer_text) === normalizedUserAnswer);
+  const normalizedChoiceUserAnswer = normalizeChoiceAnswer(userAnswer);
+  const correct = correctAnswers.some((answer) => {
+    const normalizedCorrectAnswer = normalizeAnswer(answer.answer_text);
+    return (
+      normalizedCorrectAnswer === normalizedUserAnswer ||
+      normalizeChoiceAnswer(answer.answer_text) === normalizedChoiceUserAnswer
+    );
+  });
 
   return {
     taskId: task.id,

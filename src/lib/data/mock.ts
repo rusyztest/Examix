@@ -10,17 +10,40 @@ export const demoProfile: Profile = {
 
 export const demoTasks: Task[] = [
   {
-    id: "task-1",
+    id: "task-a1-demo-1",
     part: "A",
     task_number: 1,
-    topic: "Орфография: безударные гласные",
+    topic: "А1. Орфография: буквы А/О в корне",
     difficulty: "easy",
     text_id: null,
-    question: "Укажите слово, в котором пропущена проверяемая безударная гласная корня: заг..реть, прик..саться, д..лина, р..стение.",
-    type: "short",
-    explanation: "В слове «долина» безударная гласная проверяется словом «дол». Остальные слова регулируются чередованием или словарным написанием.",
+    question: `Пишется А на месте пропуска в словах:
+1. гр..моздкий;
+2. школьный в..хтёр;
+3. р..стительность;
+4. высокий к..блук;
+5. нак..лоть дров.`,
+    type: "multiple",
+    explanation: "А пишется в словах: вахтёр, растительность, каблук. В словах «громоздкий» и «наколоть» пишется О.",
     created_at: new Date().toISOString(),
-    answers: [{ id: "a1", task_id: "task-1", answer_text: "долина", is_correct: true }]
+    answers: [{ id: "a1-demo-1", task_id: "task-a1-demo-1", answer_text: "2,3,4", is_correct: true }]
+  },
+  {
+    id: "task-a1-demo-2",
+    part: "A",
+    task_number: 1,
+    topic: "А1. Орфография: буквы А/О в корне",
+    difficulty: "medium",
+    text_id: null,
+    question: `Пишется А на месте пропуска в словах:
+1. з..ря;
+2. к..снуться;
+3. изл..гать;
+4. пл..вец;
+5. прик..саться.`,
+    type: "multiple",
+    explanation: "А пишется в словах «заря», «излагать», «прикасаться». В словах «коснуться» и «пловец» пишется О.",
+    created_at: new Date().toISOString(),
+    answers: [{ id: "a1-demo-2", task_id: "task-a1-demo-2", answer_text: "1,3,5", is_correct: true }]
   },
   {
     id: "task-5",
