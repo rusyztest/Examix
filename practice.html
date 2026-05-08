@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Examix — тренировки</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f8fafc;
+        --surface: rgba(255, 255, 255, 0.9);
+        --text: #0f172a;
+        --muted: #64748b;
+        --primary: #635bff;
+        --accent: #06b6d4;
+        --border: rgba(15, 23, 42, 0.1);
+        --shadow: 0 24px 80px rgba(79, 70, 229, 0.16);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #050816;
+          --surface: rgba(15, 23, 42, 0.86);
+          --text: #e2e8f0;
+          --muted: #94a3b8;
+          --border: rgba(226, 232, 240, 0.12);
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(99, 91, 255, 0.2), transparent 34rem),
+          linear-gradient(var(--border) 1px, transparent 1px),
+          linear-gradient(90deg, var(--border) 1px, transparent 1px),
+          var(--bg);
+        background-size: auto, 44px 44px, 44px 44px, auto;
+      }
+      a { color: inherit; text-decoration: none; }
+      .container { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+      .header { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border); backdrop-filter: blur(18px); background: color-mix(in srgb, var(--bg) 84%, transparent); }
+      .nav { display: flex; min-height: 72px; align-items: center; justify-content: space-between; gap: 24px; }
+      .brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: -0.03em; }
+      .brand-mark { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 15px; color: white; background: linear-gradient(135deg, var(--primary), var(--accent)); box-shadow: var(--shadow); }
+      .nav-links { display: flex; gap: 22px; color: var(--muted); font-size: 14px; }
+      .button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border: 1px solid var(--border); border-radius: 999px; font-weight: 700; background: var(--surface); transition: transform 0.18s ease, border-color 0.18s ease; }
+      .button:hover { transform: translateY(-1px); border-color: rgba(99, 91, 255, 0.45); }
+      .button-primary { color: #fff; border-color: transparent; background: linear-gradient(135deg, var(--primary), #4f46e5); box-shadow: var(--shadow); }
+      .hero { padding: 72px 0 28px; }
+      .eyebrow { display: inline-flex; margin-bottom: 18px; padding: 9px 14px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); background: var(--surface); font-size: 14px; }
+      h1 { max-width: 820px; margin: 0; font-size: clamp(40px, 7vw, 76px); line-height: 0.98; letter-spacing: -0.07em; }
+      .lead { max-width: 720px; color: var(--muted); font-size: 19px; line-height: 1.65; }
+      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; padding: 28px 0 76px; }
+      .card { min-height: 240px; border: 1px solid var(--border); border-radius: 28px; background: var(--surface); padding: 24px; backdrop-filter: blur(18px); animation: fade-up 0.65s ease both; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+      .card:hover { transform: translateY(-4px); border-color: rgba(99, 91, 255, 0.45); box-shadow: var(--shadow); }
+      .card:nth-child(2) { animation-delay: 90ms; }
+      .card:nth-child(3) { animation-delay: 180ms; }
+      .card-icon { display: grid; width: 46px; height: 46px; margin-bottom: 18px; place-items: center; border-radius: 16px; color: white; background: linear-gradient(135deg, var(--primary), var(--accent)); }
+      .card h2 { margin: 0 0 10px; font-size: 24px; letter-spacing: -0.04em; }
+      .card p { color: var(--muted); line-height: 1.6; }
+      @keyframes fade-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+      @media (max-width: 860px) { .nav-links { display: none; } .grid { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <nav class="container nav" aria-label="Основная навигация">
+        <a class="brand" href="/">
+          <span class="brand-mark">Э</span>
+          <span>Examix</span>
+        </a>
+        <div class="nav-links">
+          <a href="/practice">Тренировка</a>
+          <a href="/practice/a1">А1</a>
+          <a href="/exam">Экзамен</a>
+          <a href="/lobby">Лобби</a>
+        </div>
+        <a class="button" href="/">На главную</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <span class="eyebrow">Тренировки · русский язык · 11 класс</span>
+        <h1>Выберите тип задания</h1>
+        <p class="lead">Страница `/practice` теперь доступна и работает как статическая HTML-страница. Тест А1 можно открыть сразу, без сборки Next.js.</p>
+      </section>
+
+      <section class="grid" aria-label="Доступные тренировки">
+        <a class="card" href="/practice/a1">
+          <div class="card-icon">А1</div>
+          <h2>Буквы А/О в корне</h2>
+          <p>Выберите все слова, где на месте пропуска пишется буква А. Правильных ответов может быть от 2 до 4.</p>
+          <span class="button button-primary">Открыть тренировку</span>
+        </a>
+        <a class="card" href="/practice/a1">
+          <div class="card-icon">↻</div>
+          <h2>Открыть тренировку А1</h2>
+          <p>Много вариантов на ту же орфограмму: словарные слова, -раст-/-рос-, -лаг-/-лож-, -кас-/-кос-.</p>
+          <span class="button">Тренироваться</span>
+        </a>
+        <a class="card" href="/">
+          <div class="card-icon">⌂</div>
+          <h2>Вернуться на главную</h2>
+          <p>Главная страница ведет к основным режимам платформы и объясняет сценарии подготовки.</p>
+          <span class="button">Главная</span>
+        </a>
+      </section>
+    </main>
+  </body>
+</html>
