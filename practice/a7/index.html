@@ -134,18 +134,32 @@
     </main>
 
     <script>
-      const wordBank = [["(по)осеннему ненастный", 1], ["(синевато)серые тени", 1], ["(социал)демократ", 1], ["(кино)плёнка", 0], ["(широко)плечий мужчина", 0], ["(юго)запад", 1], ["(пол)лимона", 1], ["(вице)президент", 1], ["полуостров", 0], ["(светло)зелёный", 1]];
+      const seedBank = [["(по)осеннему ненастный", 1, "Наречие с по- и суффиксом -ему."], ["(синевато)серые тени", 1, "Сложное прилагательное оттенка."], ["(социал)демократ", 1, "Сложное существительное."], ["(кино)плёнка", 0, "Пишется слитно: киноплёнка."], ["(широко)плечий", 0, "Пишется слитно: широкоплечий."], ["(юго)запад", 1, "Стороны света через дефис."], ["(пол)лимона", 1, "С пол- перед Л через дефис."], ["(вице)президент", 1, "Иноязычная часть через дефис."], ["(полу)остров", 0, "Полу- пишется слитно."], ["(светло)зелёный", 1, "Сложный цвет через дефис."]];
+
+      function buildWordBank(size = 210) {
+        const bank = [];
+        while (bank.length < size) {
+          for (const item of shuffle(seedBank)) {
+            if (bank.length >= size) break;
+            const [masked, tag, explanation] = item;
+            const isCorrect = Boolean(tag);
+            bank.push({ masked, isCorrect, explanation });
+          }
+        }
+        return bank;
+      }
+
+      const wordBank = buildWordBank(210);
 
       function buildTaskPool(size = 50) {
         const pool = [];
-        for (let i = 0; i < size; i += 1) {
-          const shuffled = shuffle(wordBank).slice(0, 5);
-          const correct = shuffled.map((item, idx) => item[1] ? String(idx + 1) : null).filter(Boolean);
-          if (correct.length < 2 || correct.length > 4) { i -= 1; continue; }
-          const questionLines = shuffled.map((item, idx) => `${idx + 1}. ${item[0]};`).join("\n");
-          const explanation = shuffled.map((item, idx) => `${idx + 1}) ${item[0]} — ${item[1] ? "подходит" : "не подходит"}`).join("; ");
-          pool.push({ difficulty: ["easy", "medium", "hard"][i % 3], answer: correct.join(","), question: `Через дефис пишутся слова:
-${questionLines}`, explanation });
+        while (pool.length < size) {
+          const selected = shuffle(wordBank).slice(0, 5);
+          const correct = selected.map((w, i) => w.isCorrect ? String(i + 1) : null).filter(Boolean);
+          if (correct.length < 2 || correct.length > 4) continue;
+          const question = `Через дефис пишутся слова:\n` + selected.map((w, i) => `${i + 1}. ${w.masked};`).join('\\n');
+          const explanation = selected.map((w, i) => `${i + 1}) ${w.masked} — ${w.explanation}`).join(' ');
+          pool.push({ difficulty: ['easy','medium','hard'][pool.length % 3], answer: correct.join(','), question, explanation });
         }
         return pool;
       }

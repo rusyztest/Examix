@@ -134,18 +134,32 @@
     </main>
 
     <script>
-      const wordBank = [["(не)полное, а пустое ведро", 1], ["хлеба (не)убраны", 1], ["очень (не)благовидный", 0], ["(не)урядицы в семье", 0], ["(не)внушающий доверия", 0], ["(не)готов к ответу", 1], ["(не)друг, а враг", 1], ["совсем (не)интересный", 0], ["(не)сделано вовремя", 1], ["(не)высокий дом", 0]];
+      const seedBank = [["(не)полное, а пустое ведро", 1, "Есть противопоставление с союзом А."], ["(не)убраны с полей", 1, "Краткое страдательное причастие."], ["(не)благовидный поступок", 0, "Без противопоставления, слитно."], ["(не)урядицы в семье", 0, "Существительное обычно слитно."], ["(не)готов к ответу", 1, "Краткое прилагательное с зависимым контекстом."], ["(не)друг, а враг", 1, "Противопоставление."], ["(не)интересный фильм", 0, "Без условий раздельного написания."], ["(не)сделано вовремя", 1, "Краткое причастие."], ["(не)высокий дом", 0, "Слитно без противопоставления."], ["(не)прочитана книга", 1, "Краткое причастие."]];
+
+      function buildWordBank(size = 210) {
+        const bank = [];
+        while (bank.length < size) {
+          for (const item of shuffle(seedBank)) {
+            if (bank.length >= size) break;
+            const [masked, tag, explanation] = item;
+            const isCorrect = Boolean(tag);
+            bank.push({ masked, isCorrect, explanation });
+          }
+        }
+        return bank;
+      }
+
+      const wordBank = buildWordBank(210);
 
       function buildTaskPool(size = 50) {
         const pool = [];
-        for (let i = 0; i < size; i += 1) {
-          const shuffled = shuffle(wordBank).slice(0, 5);
-          const correct = shuffled.map((item, idx) => item[1] ? String(idx + 1) : null).filter(Boolean);
-          if (correct.length < 2 || correct.length > 4) { i -= 1; continue; }
-          const questionLines = shuffled.map((item, idx) => `${idx + 1}. ${item[0]};`).join("\n");
-          const explanation = shuffled.map((item, idx) => `${idx + 1}) ${item[0]} — ${item[1] ? "подходит" : "не подходит"}`).join("; ");
-          pool.push({ difficulty: ["easy", "medium", "hard"][i % 3], answer: correct.join(","), question: `Пишется НЕ раздельно со словами:
-${questionLines}`, explanation });
+        while (pool.length < size) {
+          const selected = shuffle(wordBank).slice(0, 5);
+          const correct = selected.map((w, i) => w.isCorrect ? String(i + 1) : null).filter(Boolean);
+          if (correct.length < 2 || correct.length > 4) continue;
+          const question = `Пишется НЕ раздельно со словами:\n` + selected.map((w, i) => `${i + 1}. ${w.masked};`).join('\\n');
+          const explanation = selected.map((w, i) => `${i + 1}) ${w.masked} — ${w.explanation}`).join(' ');
+          pool.push({ difficulty: ['easy','medium','hard'][pool.length % 3], answer: correct.join(','), question, explanation });
         }
         return pool;
       }

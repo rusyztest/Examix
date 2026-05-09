@@ -134,18 +134,33 @@
     </main>
 
     <script>
-      const wordBank = [["безмол..ствовать", 1], ["частный детекти..", 0], ["уча..ствовать", 1], ["шеФская помощь", 0], ["колдо..ство", 0], ["чувСтвовать", 0], ["здраВствуй", 0], ["веЖливый", 0], ["взрыв", 0], ["врач", 0]];
+      const seedBank = [["безмол..ствовать", "в", "Безмолвствовать — исторический корень -молв-."], ["уча..ствовать", "в", "Участвовать пишется с В."], ["детекти..", "-", "Детектив: буква В уже в слове, пропуска нет по правилу."], ["ше..ский", "-", "Шефский, не В."], ["колдо..ство", "-", "Колдовство, не вставка В."], ["здо..ье", "р", "Здоровье: пропуск не на В."], ["я..ственный", "-", "Явственный: пропуск не на В."], ["чу..ство", "-", "Чувство: без В в произношении, но в написании есть В."], ["пра..да", "-", "Правда: иная орфограмма."], ["сло..о", "-", "Слово: иная орфограмма."]];
+
+      function buildWordBank(size = 210) {
+        const bank = [];
+        while (bank.length < size) {
+          for (const item of shuffle(seedBank)) {
+            if (bank.length >= size) break;
+            const [masked, tag, explanation] = item;
+            const isCorrect = tag === "в";
+            bank.push({ masked, isCorrect, explanation });
+          }
+        }
+        return bank;
+      }
+
+      const wordBank = buildWordBank(210);
 
       function buildTaskPool(size = 50) {
         const pool = [];
-        for (let i = 0; i < size; i += 1) {
-          const shuffled = shuffle(wordBank).slice(0, 5);
-          const correct = shuffled.map((item, idx) => item[1] ? String(idx + 1) : null).filter(Boolean);
-          if (correct.length < 2 || correct.length > 4) { i -= 1; continue; }
-          const questionLines = shuffled.map((item, idx) => `${idx + 1}. ${item[0]};`).join("\n");
-          const explanation = shuffled.map((item, idx) => `${idx + 1}) ${item[0]} — ${item[1] ? "подходит" : "не подходит"}`).join("; ");
-          pool.push({ difficulty: ["easy", "medium", "hard"][i % 3], answer: correct.join(","), question: `Пишется В на месте пропуска в словах:
-${questionLines}`, explanation });
+        while (pool.length < size) {
+          const selected = shuffle(wordBank).slice(0, 5);
+          const correct = selected.map((w, i) => w.isCorrect ? String(i + 1) : null).filter(Boolean);
+          if (correct.length < 2 || correct.length > 4) continue;
+          const question = `Пишется В на месте пропуска:
+` + selected.map((w, i) => `${i + 1}. ${w.masked};`).join('\\n');
+          const explanation = selected.map((w, i) => `${i + 1}) ${w.masked} — ${w.explanation}`).join(' ');
+          pool.push({ difficulty: ['easy','medium','hard'][pool.length % 3], answer: correct.join(','), question, explanation });
         }
         return pool;
       }
