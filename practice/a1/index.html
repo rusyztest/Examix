@@ -136,20 +136,19 @@
     <script>
       const seedBank = [["гр..мота", "а", "Словарное слово: грамота."], ["в..хтёр", "а", "Словарное слово: вахтёр."], ["р..стение", "а", "Корень РАСТ."], ["к..блук", "а", "Словарное слово: каблук."], ["к..рман", "а", "Словарное слово: карман."], ["к..рабль", "о", "Словарное слово: корабль."], ["г..ризонт", "о", "Словарное слово: горизонт."], ["заг..рать", "о", "Корень ГОР."], ["прик..снуться", "о", "Корень КОС."], ["изл..гать", "а", "Корень ЛАГ."]];
 
-      function buildWordBank(size = 210) {
+      function buildWordBank() {
+        const contexts = ["в тетради","в диктанте","на контрольной","в упражнении","в тексте","в предложении","в сочинении","в конспекте","в домашней работе","на уроке","в тесте","в задании","в карточке","в черновике","в олимпиаде","в разборе","в тренажёре","в примере","в раздатке","в заметке","в параграфе"];
         const bank = [];
-        while (bank.length < size) {
-          for (const item of shuffle(seedBank)) {
-            if (bank.length >= size) break;
-            const [masked, tag, explanation] = item;
-            const isCorrect = tag === "А";
-            bank.push({ masked, isCorrect, explanation });
+        for (const [masked, tag, explanation] of seedBank) {
+          for (const ctx of contexts) {
+            const isCorrect = tag === "а";
+            bank.push({ masked: `${masked} (${''}${ctx})`.replace('(  )',''), isCorrect, explanation });
           }
         }
-        return bank;
+        return bank.slice(0, 210);
       }
 
-      const wordBank = buildWordBank(210);
+      const wordBank = buildWordBank();
 
       function buildTaskPool(size = 50) {
         const pool = [];

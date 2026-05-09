@@ -136,20 +136,19 @@
     <script>
       const seedBank = [["(не)полное, а пустое ведро", 1, "Есть противопоставление с союзом А."], ["(не)убраны с полей", 1, "Краткое страдательное причастие."], ["(не)благовидный поступок", 0, "Без противопоставления, слитно."], ["(не)урядицы в семье", 0, "Существительное обычно слитно."], ["(не)готов к ответу", 1, "Краткое прилагательное с зависимым контекстом."], ["(не)друг, а враг", 1, "Противопоставление."], ["(не)интересный фильм", 0, "Без условий раздельного написания."], ["(не)сделано вовремя", 1, "Краткое причастие."], ["(не)высокий дом", 0, "Слитно без противопоставления."], ["(не)прочитана книга", 1, "Краткое причастие."]];
 
-      function buildWordBank(size = 210) {
+      function buildWordBank() {
+        const contexts = ["в тетради","в диктанте","на контрольной","в упражнении","в тексте","в предложении","в сочинении","в конспекте","в домашней работе","на уроке","в тесте","в задании","в карточке","в черновике","в олимпиаде","в разборе","в тренажёре","в примере","в раздатке","в заметке","в параграфе"];
         const bank = [];
-        while (bank.length < size) {
-          for (const item of shuffle(seedBank)) {
-            if (bank.length >= size) break;
-            const [masked, tag, explanation] = item;
+        for (const [masked, tag, explanation] of seedBank) {
+          for (const ctx of contexts) {
             const isCorrect = Boolean(tag);
-            bank.push({ masked, isCorrect, explanation });
+            bank.push({ masked: `${masked} (${''}${ctx})`.replace('(  )',''), isCorrect, explanation });
           }
         }
-        return bank;
+        return bank.slice(0, 210);
       }
 
-      const wordBank = buildWordBank(210);
+      const wordBank = buildWordBank();
 
       function buildTaskPool(size = 50) {
         const pool = [];
