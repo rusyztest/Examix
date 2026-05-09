@@ -156,7 +156,8 @@
           const selected = shuffle(wordBank).slice(0, 5);
           const correct = selected.map((w, i) => w.isCorrect ? String(i + 1) : null).filter(Boolean);
           if (correct.length < 2 || correct.length > 4) continue;
-          const question = `Через дефис пишутся слова:\n` + selected.map((w, i) => `${i + 1}. ${w.masked};`).join('\\n');
+          const question = `Через дефис пишутся слова:
+` + selected.map((w, i) => `${i + 1}. ${w.masked};`).join('\n');
           const explanation = selected.map((w, i) => `${i + 1}) ${w.masked} — ${w.explanation}`).join(' ');
           pool.push({ difficulty: ['easy','medium','hard'][pool.length % 3], answer: correct.join(','), question, explanation });
         }
