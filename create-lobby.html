@@ -29,7 +29,8 @@
       </form>
       <p id="msg" class="error"></p>
       <div id="created" class="hidden">
-        <p>Код: <span class="code" id="code"></span></p>
+        <p>Код комнаты: <span class="code" id="code"></span></p>
+        <p>Код подключения: <span class="code" id="portableCode"></span></p>
         <p>Ссылка-приглашение: <a id="invite"></a></p>
         <div class="row"><a id="openLobby" class="button button-primary">Открыть лобби</a></div>
       </div>
@@ -48,12 +49,15 @@
         const mode = [...document.querySelectorAll('input[name="mode"]')].find((item) => item.checked)?.value || 'all';
         if (!timeLimit || !maxPlayers) throw new Error('Заполните все поля.');
         const lobby = createLobby({ timeLimit, maxPlayers, mode });
-        const snapshot = btoa(encodeURIComponent(JSON.stringify({ code: lobby.code, timeLimit: lobby.timeLimit, maxPlayers: lobby.maxPlayers, mode: lobby.mode, createdAt: lobby.createdAt })));
+        const payloadObj = { code: lobby.code, timeLimit: lobby.timeLimit, maxPlayers: lobby.maxPlayers, mode: lobby.mode, createdAt: lobby.createdAt };
+        const snapshot = btoa(encodeURIComponent(JSON.stringify(payloadObj)));
+        const portableCode = snapshot.replace(/=+$/g, "").replace(/\+/g, "-").replace(/\//g, "_");
         const invite = `./join-lobby.html?code=${lobby.code}&d=${snapshot}`;
         document.getElementById('created').classList.remove('hidden');
         document.getElementById('code').textContent = lobby.code;
         document.getElementById('invite').textContent = invite;
         document.getElementById('invite').href = invite;
+        document.getElementById('portableCode').textContent = portableCode;
         document.getElementById('openLobby').href = `./lobby.html?code=${lobby.code}`;
       } catch (error) {
         msg.textContent = error.message || 'Не удалось создать игру';
