@@ -12,7 +12,7 @@ export default function LobbyPage() {
         <Card className="animate-fade-up">
           <CardHeader><CardTitle>Создать комнату</CardTitle></CardHeader>
           <CardContent>
-            <form action={createLobby} className="grid gap-4">
+            <form action={async (formData) => { "use server"; await createLobby(formData); }} className="grid gap-4">
               <div className="grid gap-2">
                 <Label>Режим</Label>
                 <select name="mode" className="h-10 rounded-xl border bg-background px-3">
@@ -21,11 +21,15 @@ export default function LobbyPage() {
                 </select>
               </div>
               <div className="grid gap-2">
-                <Label>Номера заданий через запятую</Label>
-                <Input name="taskNumbers" placeholder="1,5,12" />
+                <Label>Выбор номеров</Label>
+                <select name="taskPreset" className="h-10 rounded-xl border bg-background px-3">
+                  <option value="all">Все задания (A+B)</option>
+                  <option value="a">Только часть A</option>
+                  <option value="b">Только часть B</option>
+                </select>
               </div>
               <div className="grid gap-2 sm:grid-cols-2">
-                <div><Label>Количество вопросов</Label><Input name="questionCount" type="number" defaultValue={12} /></div>
+                <div><Label>Количество участников</Label><Input name="participantLimit" type="number" defaultValue={30} min={2} max={80} /></div>
                 <div><Label>Время, минут</Label><Input name="timeLimit" type="number" defaultValue={90} /></div>
               </div>
               <input type="hidden" name="randomOrder" value="true" />
@@ -38,7 +42,7 @@ export default function LobbyPage() {
         <Card className="animate-fade-up animation-delay-150">
           <CardHeader><CardTitle>Подключиться по коду</CardTitle></CardHeader>
           <CardContent>
-            <form action={joinLobbyFromForm} className="grid gap-4">
+            <form action={async (formData) => { "use server"; await joinLobbyFromForm(formData); }} className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="code">Код комнаты</Label>
                 <Input id="code" name="code" placeholder="ABC123" required />

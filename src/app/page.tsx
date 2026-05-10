@@ -85,6 +85,9 @@ export default function HomePage() {
               занятия через Supabase Realtime. Как только вы добавите задания в базу — режимы начнут использовать их.
             </p>
             <div className="mt-8 flex animate-fade-up flex-col gap-3 animation-delay-500 sm:flex-row">
+              <Button size="lg" variant="outline" asChild>
+                <Link href="/lobby/join">Присоединиться к лобби</Link>
+              </Button>
               <Button size="lg" asChild>
                 <Link href="/auth">
                   Начать без регистрации <ArrowRight className="h-4 w-4" />
