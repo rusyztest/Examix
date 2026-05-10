@@ -1,0 +1,6 @@
+const table = new Map(`0-0 1-1 2-2 3-3 4-4 5-5 6-6 7-7 8-9 9-10 10-12 11-14 12-16 13-18 14-20 15-22 16-23 17-25 18-27 19-28 20-29 21-31 22-32 23-34 24-35 25-36 26-37 27-38 28-39 29-41 30-42 31-43 32-44 33-45 34-46 35-47 36-48 37-49 38-50 39-51 40-52 41-53 42-54 43-55 44-56 45-57 46-58 47-59 48-60 49-61 50-62 51-63 52-64 53-65 54-66 55-67 56-68 57-69 58-70 59-71 60-72 61-73 62-74 63-75 64-76 65-77 66-78 67-79 68-80 69-81 70-82 71-83 72-84 73-85 74-87 75-89 76-90 77-92 78-96 79-98 80-100`.split(' ').map(p=>p.split('-').map(Number)));
+export function diffOne(a,b){if(Math.abs(a.length-b.length)>1)return false;let d=0;for(let i=0;i<Math.max(a.length,b.length);i++)if(a[i]!==b[i])d++;return d===1;}
+export function scoreAnswer(correct,user){if(correct===user) return 2; if(diffOne(String(correct),String(user))) return 1; return 0;}
+export function summarize(results,full){const totalPoints=results.reduce((s,r)=>s+r.points,0);const fully=results.filter(r=>r.points===2).length,partial=results.filter(r=>r.points===1).length,wrong=results.filter(r=>r.points===0).length;
+if(full){return {primary:totalPoints,test:table.get(totalPoints)??0,fully,partial,wrong};}
+return {percent:Math.round((fully+partial*0.5)/results.length*100),fully,partial,wrong};}
