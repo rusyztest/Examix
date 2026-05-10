@@ -14,7 +14,18 @@ const lobbySchema = z.object({
   resultsVisibility: z.enum(["host", "all"]).default("all")
 });
 
-const joinCodeSchema = z.string().trim().min(4).max(10).regex(/^[A-Za-z0-9]+$/, "Код должен содержать только буквы и цифры");
+const CYRILLIC_TO_LATIN: Record<string, string> = { А: "A", В: "B", С: "C", Е: "E", Н: "H", К: "K", М: "M", О: "O", Р: "P", Т: "T", Х: "X", У: "Y" };
+
+function normalizeJoinCode(value: string) {
+  return String(value)
+    .trim()
+    .toUpperCase()
+    .split("")
+    .map((char) => CYRILLIC_TO_LATIN[char] ?? char)
+    .join("");
+}
+
+const joinCodeSchema = z.string().transform(normalizeJoinCode).min(4).max(10).regex(/^[A-Z0-9]+$/, "Код должен содержать только буквы и цифры");
 
 export async function createLobby(formData: FormData) {
   const parsed = lobbySchema.parse(Object.fromEntries(formData));
@@ -51,7 +62,7 @@ export async function createLobby(formData: FormData) {
 }
 
 export async function joinLobby(code: string) {
-  const parsedCode = joinCodeSchema.parse(code).toUpperCase();
+  const parsedCode = joinCodeSchema.parse(code);
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return { error: "Необходимо войти" };
