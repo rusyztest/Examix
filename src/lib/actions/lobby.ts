@@ -7,9 +7,9 @@ import { createClient } from "@/lib/supabase/server";
 
 const lobbySchema = z.object({
   mode: z.enum(["practice", "exam"]),
-  questionCount: z.coerce.number().min(1).max(40),
+  participantLimit: z.coerce.number().min(2).max(80),
   timeLimit: z.coerce.number().min(5).max(240),
-  taskNumbers: z.string().default(""),
+  taskPreset: z.enum(["all", "a", "b"]).default("all"),
   randomOrder: z.coerce.boolean().default(true),
   resultsVisibility: z.enum(["host", "all"]).default("all")
 });
@@ -20,10 +20,18 @@ export async function createLobby(formData: FormData) {
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return { error: "Необходимо войти" };
 
+  const presetTaskNumbers = parsed.taskPreset === "a"
+    ? Array.from({ length: 18 }, (_, i) => i + 1)
+    : parsed.taskPreset === "b"
+      ? Array.from({ length: 22 }, (_, i) => i + 19)
+      : Array.from({ length: 40 }, (_, i) => i + 1);
+
   const settings = {
-    questionCount: parsed.questionCount,
+    questionCount: presetTaskNumbers.length,
     timeLimit: parsed.timeLimit * 60,
-    taskNumbers: parsed.taskNumbers.split(",").map((item) => Number(item.trim())).filter(Boolean),
+    taskNumbers: presetTaskNumbers,
+    participantLimit: parsed.participantLimit,
+    taskPreset: parsed.taskPreset,
     randomOrder: parsed.randomOrder,
     privateByCode: true,
     resultsVisibility: parsed.resultsVisibility
@@ -52,6 +60,12 @@ export async function joinLobby(code: string) {
 
 export async function joinLobbyFromForm(formData: FormData) {
   const code = z.string().min(4).max(12).parse(formData.get("code"));
+  const nickname = z.string().min(2).max(32).parse(formData.get("nickname"));
+  const supabase = await createClient();
+  const { data: userData } = await supabase.auth.getUser();
+  if (userData.user) {
+    await supabase.from("profiles").update({ username: nickname }).eq("id", userData.user.id);
+  }
   return joinLobby(code);
 }
 

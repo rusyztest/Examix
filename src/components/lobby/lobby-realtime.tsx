@@ -42,7 +42,10 @@ export function LobbyRealtime({ lobby, initialMembers }: { lobby: Lobby; initial
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {members.map((member) => <div key={member.id} className="rounded-2xl border p-4"><p className="font-medium">{member.profiles?.username ?? member.user_id}</p><p className="text-sm text-muted-foreground">Баллы: {member.score} · {member.finished ? "готов" : "в процессе"}</p></div>)}
         </div>
-        <Button className="w-full sm:w-auto">Начать синхронно</Button>
+        <div className="rounded-xl border p-4 text-sm text-muted-foreground">
+          Лимит времени: {Math.round(lobby.settings.timeLimit / 60)} мин · Заданий: {lobby.settings.questionCount}
+        </div>
+        <Button className="w-full sm:w-auto">Начать игру</Button>
       </CardContent>
     </Card>
   );
