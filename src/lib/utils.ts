@@ -17,6 +17,6 @@ export function formatDuration(seconds: number) {
 
 export function createLobbyCode() {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  const length = 8;
+  const length = 6;
   return Array.from({ length }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join("");
 }
