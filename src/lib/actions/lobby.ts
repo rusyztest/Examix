@@ -14,6 +14,8 @@ const lobbySchema = z.object({
   resultsVisibility: z.enum(["host", "all"]).default("all")
 });
 
+const joinCodeSchema = z.string().trim().min(4).max(10).regex(/^[A-Za-z0-9]+$/, "Код должен содержать только буквы и цифры");
+
 export async function createLobby(formData: FormData) {
   const parsed = lobbySchema.parse(Object.fromEntries(formData));
   const supabase = await createClient();
@@ -29,29 +31,39 @@ export async function createLobby(formData: FormData) {
     resultsVisibility: parsed.resultsVisibility
   };
 
-  const { data, error } = await supabase
-    .from("lobbies")
-    .insert({ code: createLobbyCode(), host_id: userData.user.id, mode: parsed.mode, settings, started: false })
-    .select("code")
-    .single<{ code: string }>();
+  let data: { code: string } | null = null;
+  let error: { message: string } | null = null;
+
+  for (let i = 0; i < 5; i += 1) {
+    const response = await supabase
+      .from("lobbies")
+      .insert({ code: createLobbyCode(), host_id: userData.user.id, mode: parsed.mode, settings, started: false })
+      .select("code")
+      .single<{ code: string }>();
+
+    data = response.data;
+    error = response.error;
+    if (!error || !error.message.toLowerCase().includes("duplicate")) break;
+  }
 
   if (error || !data) return { error: error?.message ?? "Комната не создана" };
   redirect(`/lobby/${data.code}`);
 }
 
 export async function joinLobby(code: string) {
+  const parsedCode = joinCodeSchema.parse(code).toUpperCase();
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return { error: "Необходимо войти" };
-  const { data: lobby, error: lobbyError } = await supabase.from("lobbies").select("id").eq("code", code.toUpperCase()).single<{ id: string }>();
+  const { data: lobby, error: lobbyError } = await supabase.from("lobbies").select("id").eq("code", parsedCode).single<{ id: string }>();
   if (lobbyError || !lobby) return { error: "Лобби не найдено" };
   const { error } = await supabase.from("lobby_members").upsert({ lobby_id: lobby.id, user_id: userData.user.id }, { onConflict: "lobby_id,user_id" });
   if (error) return { error: error.message };
-  redirect(`/lobby/${code.toUpperCase()}`);
+  redirect(`/lobby/${parsedCode}`);
 }
 
 export async function joinLobbyFromForm(formData: FormData) {
-  const code = z.string().min(4).max(12).parse(formData.get("code"));
+  const code = joinCodeSchema.parse(formData.get("code"));
   return joinLobby(code);
 }
 
