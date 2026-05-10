@@ -48,7 +48,8 @@
         const mode = [...document.querySelectorAll('input[name="mode"]')].find((item) => item.checked)?.value || 'all';
         if (!timeLimit || !maxPlayers) throw new Error('Заполните все поля.');
         const lobby = createLobby({ timeLimit, maxPlayers, mode });
-        const invite = `./join-lobby.html?code=${lobby.code}`;
+        const snapshot = btoa(encodeURIComponent(JSON.stringify({ code: lobby.code, timeLimit: lobby.timeLimit, maxPlayers: lobby.maxPlayers, mode: lobby.mode, createdAt: lobby.createdAt })));
+        const invite = `./join-lobby.html?code=${lobby.code}&d=${snapshot}`;
         document.getElementById('created').classList.remove('hidden');
         document.getElementById('code').textContent = lobby.code;
         document.getElementById('invite').textContent = invite;
