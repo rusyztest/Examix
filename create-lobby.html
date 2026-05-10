@@ -10,54 +10,12 @@
   <main class="page-wrap">
     <section class="panel">
       <h1>Создать лобби</h1>
-      <p class="muted">Настройте комнату и поделитесь кодом/ссылкой.</p>
-      <form id="createForm" class="grid" novalidate>
-        <div class="grid grid-2">
-          <div><label for="time">Время (мин)</label><input id="time" type="number" value="120" min="5" max="240" required /></div>
-          <div><label for="players">Участников</label><input id="players" type="number" value="10" min="2" max="100" required /></div>
-        </div>
-        <label>Режим заданий</label>
-        <div class="radio-group">
-          <label class="radio-card"><input type="radio" name="mode" value="all" checked />Все задания</label>
-          <label class="radio-card"><input type="radio" name="mode" value="partA" />Только часть А</label>
-          <label class="radio-card"><input type="radio" name="mode" value="partB" />Только часть В</label>
-        </div>
-        <div class="row">
-          <button type="submit" class="button button-primary">Создать игру</button>
-          <a class="button" href="./join-lobby.html">Присоединиться</a>
-        </div>
-      </form>
-      <p id="msg" class="error"></p>
-      <div id="created" class="hidden">
-        <p>Код комнаты: <span class="code" id="code"></span></p>
-        <p>Ссылка-приглашение: <a id="invite"></a></p>
-        <div class="row"><a id="openLobby" class="button button-primary">Открыть лобби</a></div>
+      <p class="muted">Локальные комнаты отключены. Создание лобби перенесено в Supabase-версию приложения.</p>
+      <div class="row">
+        <a class="button button-primary" href="/lobby">Открыть создание лобби (Supabase)</a>
+        <a class="button" href="./join-lobby.html">Присоединиться по коду</a>
       </div>
     </section>
   </main>
-  <script type="module">
-    import { createLobby } from './assets/js/lobby-manager.js';
-    const form = document.getElementById('createForm');
-    const msg = document.getElementById('msg');
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      msg.textContent = '';
-      try {
-        const timeLimit = Number(document.getElementById('time').value);
-        const maxPlayers = Number(document.getElementById('players').value);
-        const mode = [...document.querySelectorAll('input[name="mode"]')].find((item) => item.checked)?.value || 'all';
-        if (!timeLimit || !maxPlayers) throw new Error('Заполните все поля.');
-        const lobby = createLobby({ timeLimit, maxPlayers, mode });
-        const invite = `./join-lobby.html?code=${lobby.code}`;
-        document.getElementById('created').classList.remove('hidden');
-        document.getElementById('code').textContent = lobby.code;
-        document.getElementById('invite').textContent = invite;
-        document.getElementById('invite').href = invite;
-        document.getElementById('openLobby').href = `./lobby.html?code=${lobby.code}`;
-      } catch (error) {
-        msg.textContent = error.message || 'Не удалось создать игру';
-      }
-    });
-  </script>
 </body>
 </html>
