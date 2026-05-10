@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Examix — А4: буква Е</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f8fafc;
+        --surface: rgba(255, 255, 255, 0.92);
+        --text: #0f172a;
+        --muted: #64748b;
+        --primary: #635bff;
+        --accent: #06b6d4;
+        --ok: #10b981;
+        --bad: #ef4444;
+        --border: rgba(15, 23, 42, 0.1);
+        --shadow: 0 24px 80px rgba(79, 70, 229, 0.16);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #050816;
+          --surface: rgba(15, 23, 42, 0.9);
+          --text: #e2e8f0;
+          --muted: #94a3b8;
+          --border: rgba(226, 232, 240, 0.12);
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(99, 91, 255, 0.22), transparent 34rem),
+          radial-gradient(circle at top right, rgba(6, 182, 212, 0.18), transparent 30rem),
+          linear-gradient(var(--border) 1px, transparent 1px),
+          linear-gradient(90deg, var(--border) 1px, transparent 1px),
+          var(--bg);
+        background-size: auto, auto, 44px 44px, 44px 44px, auto;
+      }
+      a { color: inherit; text-decoration: none; }
+      .container { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+      .header { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border); backdrop-filter: blur(18px); background: color-mix(in srgb, var(--bg) 84%, transparent); }
+      .nav { display: flex; min-height: 72px; align-items: center; justify-content: space-between; gap: 20px; }
+      .brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: -0.03em; }
+      .brand-mark { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 15px; color: white; background: linear-gradient(135deg, var(--primary), var(--accent)); box-shadow: var(--shadow); }
+      .nav-links { display: flex; gap: 18px; color: var(--muted); font-size: 14px; }
+      .button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border: 1px solid var(--border); border-radius: 999px; font-weight: 700; cursor: pointer; background: var(--surface); color: var(--text); transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease; }
+      .button:hover { transform: translateY(-1px); border-color: rgba(99, 91, 255, 0.45); }
+      .button-primary { color: #fff; border-color: transparent; background: linear-gradient(135deg, var(--primary), #4f46e5); box-shadow: var(--shadow); }
+      .button:disabled { cursor: not-allowed; opacity: 0.55; transform: none; }
+      .hero { padding: 56px 0 26px; }
+      .eyebrow { display: inline-flex; margin-bottom: 18px; padding: 9px 14px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); background: var(--surface); font-size: 14px; }
+      h1 { max-width: 900px; margin: 0; font-size: clamp(38px, 7vw, 72px); line-height: 0.98; letter-spacing: -0.07em; }
+      .lead { max-width: 760px; color: var(--muted); font-size: 18px; line-height: 1.65; }
+      .layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 22px; padding-bottom: 72px; }
+      .card, .side-card { border: 1px solid var(--border); border-radius: 28px; background: var(--surface); backdrop-filter: blur(18px); box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05); }
+      .card { padding: 28px; animation: fade-up 0.65s ease both; }
+      .side-card { position: sticky; top: 96px; padding: 22px; height: fit-content; animation: fade-up 0.65s ease both 120ms; }
+      .task-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 22px; }
+      .badge { display: inline-flex; align-items: center; border: 1px solid rgba(99, 91, 255, 0.28); border-radius: 999px; padding: 6px 10px; color: var(--primary); background: rgba(99, 91, 255, 0.09); font-size: 13px; font-weight: 800; }
+      .question { margin: 0; white-space: pre-line; font-size: 21px; line-height: 1.75; }
+      .answer-row { display: flex; gap: 12px; margin-top: 24px; }
+      input { width: 100%; min-height: 48px; border: 1px solid var(--border); border-radius: 16px; padding: 0 14px; color: var(--text); background: var(--bg); font: inherit; outline: none; }
+      input:focus { border-color: rgba(99, 91, 255, 0.65); box-shadow: 0 0 0 4px rgba(99, 91, 255, 0.12); }
+      .result { display: none; margin-top: 18px; border-radius: 20px; padding: 16px; line-height: 1.55; }
+      .result.ok { display: block; border: 1px solid color-mix(in srgb, var(--ok) 45%, transparent); background: color-mix(in srgb, var(--ok) 12%, transparent); }
+      .result.bad { display: block; border: 1px solid color-mix(in srgb, var(--bad) 45%, transparent); background: color-mix(in srgb, var(--bad) 12%, transparent); }
+      .progress { height: 12px; overflow: hidden; border-radius: 999px; background: color-mix(in srgb, var(--muted) 18%, transparent); }
+      .progress span { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width 0.25s ease; }
+      .stat { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); color: var(--muted); }
+      .stat strong { color: var(--text); }
+      .actions { display: grid; gap: 10px; margin-top: 18px; }
+      @keyframes fade-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+      @media (max-width: 900px) { .nav-links { display: none; } .layout { grid-template-columns: 1fr; } .side-card { position: static; } .answer-row { flex-direction: column; } }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <nav class="container nav" aria-label="Основная навигация">
+        <a class="brand" href="../../index.html">
+          <span class="brand-mark">Э</span>
+          <span>Examix</span>
+        </a>
+        <div class="nav-links">
+          <a href="../practice.html">Тренировки</a>
+          <a href="./index.html">А4</a>
+          <a href="../../index.html">Главная</a>
+        </div>
+        <a class="button" href="../practice.html">Все тренировки</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <span class="eyebrow">А4 · тренировка</span>
+        <h1>Пишется Е на месте пропуска</h1>
+        <p class="lead">Введите номера слов, где пишется буква Е.</p>
+      </section>
+
+      <section class="layout">
+        <article class="card" aria-live="polite">
+          <div class="task-top">
+            <span class="badge" id="taskBadge">А4 · 1 из 7</span>
+            <span class="badge" id="difficultyBadge">easy</span>
+          </div>
+          <p class="question" id="question"></p>
+          <div class="answer-row">
+            <input id="answer" autocomplete="off" inputmode="numeric" placeholder="Например: 2,3,4" aria-label="Ответ" />
+            <button class="button button-primary" id="checkButton" type="button">Проверить</button>
+          </div>
+          <div class="result" id="result"></div>
+          <div class="answer-row">
+            <button class="button" id="prevButton" type="button">Назад</button>
+            <button class="button" id="nextButton" type="button">Следующее</button>
+          </div>
+        </article>
+
+        <aside class="side-card">
+          <h2 style="margin-top: 0">Прогресс</h2>
+          <div class="progress" aria-label="Прогресс теста"><span id="progressBar"></span></div>
+          <div class="stat"><span>Задание</span><strong id="positionStat">1/7</strong></div>
+          <div class="stat"><span>Правильно</span><strong id="scoreStat">0</strong></div>
+          <div class="stat"><span>Ошибки</span><strong id="mistakeStat">0</strong></div>
+          <div class="actions">
+            <button class="button" id="restartButton" type="button">Начать заново</button>
+            <a class="button" href="../practice.html">К тренировкам</a>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <script>
+      const seedBank = [["выпуст..м", "е", "Форма глагола: выпустим."], ["упроща..мый", "е", "Суффикс -ем- в страд. причастии."], ["застав..вший", "и", "Суффикс -ивш-."], ["заглад..л", "и", "Прош. вр.: загладил."], ["подыщ..т", "е", "Форма будущего времени: подыщет."], ["кле..вший", "и", "Действ. причастие: -ивш-."], ["увид..т", "и", "3 л. ед. ч.: увидит."], ["постро..нный", "е", "Причастие: построенный."], ["выбер..м", "е", "1 л. мн. ч.: выберем."], ["ненавид..мый", "и", "Ненавидимый — суффикс -им-."]];
+
+      function buildWordBank() {
+        const contexts = ["утром","вечером","зимой","весной","летом","осенью","в школе","дома","в классе","в городе","в деревне","на уроке","в тетради","в тексте","в диктанте","на экзамене","на тренировке","в задании","в примере","в конспекте","в справочнике"];
+        const bank = [];
+        for (const [masked, tag, explanation] of seedBank) {
+          for (const ctx of contexts) {
+            const isCorrect = tag === "е";
+            bank.push({ masked: `${masked} ${ctx}`, isCorrect, explanation: `${explanation} Контекст: ${ctx}.` });
+          }
+        }
+        return bank.slice(0, 210);
+      }
+
+      const wordBank = buildWordBank();
+
+      function buildTaskPool(size = 50) {
+        const pool = [];
+        while (pool.length < size) {
+          const selected = shuffle(wordBank).slice(0, 5);
+          const correct = selected.map((w, i) => w.isCorrect ? String(i + 1) : null).filter(Boolean);
+          if (correct.length < 2 || correct.length > 4) continue;
+          const question = `Пишется Е на месте пропуска:
+` + selected.map((w, i) => `${i + 1}. ${w.masked};`).join('\n');
+          const explanation = selected.map((w, i) => `${i + 1}) ${w.masked} — ${w.explanation}`).join(' ');
+          pool.push({ difficulty: ['easy','medium','hard'][pool.length % 3], answer: correct.join(','), question, explanation });
+        }
+        return pool;
+      }
+
+      const taskPool = buildTaskPool(80);
+
+      const ROUND_COUNT = 7;
+      function shuffle(array) { const a = array.slice(); for (let i = a.length - 1; i > 0; i -= 1) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+      function pickSessionTasks() {
+        const used = new Set();
+        const session = [];
+        for (const t of shuffle(taskPool)) {
+          const words = t.question.split("\n").slice(1);
+          if (words.some((w) => used.has(w))) continue;
+          words.forEach((w) => used.add(w));
+          session.push(t);
+          if (session.length === ROUND_COUNT) break;
+        }
+        return session.length === ROUND_COUNT ? session : shuffle(taskPool).slice(0, ROUND_COUNT);
+      }
+      let tasks = pickSessionTasks();
+
+      let current = 0;
+      let answers = new Array(tasks.length).fill(null);
+      let checked = new Array(tasks.length).fill(false);
+
+      const question = document.getElementById("question");
+      const answer = document.getElementById("answer");
+      const result = document.getElementById("result");
+      const taskBadge = document.getElementById("taskBadge");
+      const difficultyBadge = document.getElementById("difficultyBadge");
+      const progressBar = document.getElementById("progressBar");
+      const positionStat = document.getElementById("positionStat");
+      const scoreStat = document.getElementById("scoreStat");
+      const mistakeStat = document.getElementById("mistakeStat");
+      const checkButton = document.getElementById("checkButton");
+      const nextButton = document.getElementById("nextButton");
+      const prevButton = document.getElementById("prevButton");
+      const restartButton = document.getElementById("restartButton");
+
+      function normalize(value) {
+        const raw = value.trim();
+        const compact = raw.replace(/\D/g, "");
+        const parts = compact.length > 1 && !raw.match(/[,.;|\s]/)
+          ? compact.split("")
+          : raw.replace(/[;|]/g, ",").split(/[,\.\s]+/).filter(Boolean);
+        return [...new Set(parts)].sort((a, b) => a.localeCompare(b, "ru")).join(",");
+      }
+
+      function updateStats() {
+        const totalChecked = checked.filter(Boolean).length;
+        const score = answers.filter(Boolean).length;
+        const mistakes = totalChecked - score;
+        progressBar.style.width = `${Math.round(((current + 1) / tasks.length) * 100)}%`;
+        positionStat.textContent = `${current + 1}/${tasks.length}`;
+        scoreStat.textContent = String(score);
+        mistakeStat.textContent = String(mistakes);
+      }
+
+      function renderTask() {
+        const task = tasks[current];
+        taskBadge.textContent = `А4 · ${current + 1} из ${tasks.length}`;
+        difficultyBadge.textContent = task.difficulty;
+        question.textContent = task.question;
+        answer.value = "";
+        result.className = "result";
+        result.textContent = "";
+        prevButton.disabled = current === 0;
+        nextButton.textContent = current === tasks.length - 1 ? "Завершить" : "Следующее";
+        updateStats();
+        answer.focus();
+      }
+
+      function checkCurrent() {
+        const task = tasks[current];
+        const userAnswer = normalize(answer.value);
+        if (!userAnswer) return;
+        const isCorrect = userAnswer === normalize(task.answer);
+        checked[current] = true;
+        answers[current] = isCorrect;
+        result.className = `result ${isCorrect ? "ok" : "bad"}`;
+        result.innerHTML = isCorrect
+          ? `<b>Верно.</b><br>${task.explanation}`
+          : `<b>Ошибка.</b> Правильный ответ: <b>${task.answer}</b><br>${task.explanation}`;
+        updateStats();
+      }
+
+      checkButton.addEventListener("click", checkCurrent);
+      answer.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") checkCurrent();
+      });
+      nextButton.addEventListener("click", () => {
+        if (current < tasks.length - 1) {
+          current += 1;
+          renderTask();
+        } else {
+          const score = answers.filter(Boolean).length;
+          result.className = score === tasks.length ? "result ok" : "result bad";
+          result.innerHTML = `<b>Тест завершен.</b> Результат: ${score}/${tasks.length}. Можно начать заново или вернуться к тренировкам.`;
+        }
+      });
+      prevButton.addEventListener("click", () => {
+        if (current > 0) {
+          current -= 1;
+          renderTask();
+        }
+      });
+      restartButton.addEventListener("click", () => {
+        tasks = pickSessionTasks();
+        current = 0;
+        answers = new Array(tasks.length).fill(null);
+        checked = new Array(tasks.length).fill(false);
+        renderTask();
+      });
+
+      renderTask();
+    </script>
+  </body>
+</html>
