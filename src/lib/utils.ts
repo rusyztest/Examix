@@ -15,6 +15,9 @@ export function formatDuration(seconds: number) {
   return `${mins}:${secs}`;
 }
 
-export function createLobbyCode() {
-  return Math.random().toString(36).slice(2, 8).toUpperCase();
+export function createLobbyCode(length = 8) {
+  const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const codeLength = Math.min(Math.max(4, length), 10);
+
+  return Array.from({ length: codeLength }, () => characters[Math.floor(Math.random() * characters.length)]).join("");
 }

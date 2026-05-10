@@ -40,18 +40,25 @@ export async function createLobby(formData: FormData) {
 }
 
 export async function joinLobby(code: string) {
+  const normalizedCode = code.trim().toUpperCase();
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return { error: "Необходимо войти" };
-  const { data: lobby, error: lobbyError } = await supabase.from("lobbies").select("id").eq("code", code.toUpperCase()).single<{ id: string }>();
+  const { data: lobby, error: lobbyError } = await supabase.from("lobbies").select("id").eq("code", normalizedCode).single<{ id: string }>();
   if (lobbyError || !lobby) return { error: "Лобби не найдено" };
   const { error } = await supabase.from("lobby_members").upsert({ lobby_id: lobby.id, user_id: userData.user.id }, { onConflict: "lobby_id,user_id" });
   if (error) return { error: error.message };
-  redirect(`/lobby/${code.toUpperCase()}`);
+  redirect(`/lobby/${normalizedCode}`);
 }
 
 export async function joinLobbyFromForm(formData: FormData) {
-  const code = z.string().min(4).max(12).parse(formData.get("code"));
+  const code = z
+    .string()
+    .trim()
+    .toUpperCase()
+    .regex(/^[A-Z0-9]{4,10}$/u, "Код должен содержать от 4 до 10 символов: только латинские буквы и цифры")
+    .parse(formData.get("code"));
+
   return joinLobby(code);
 }
 
