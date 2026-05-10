@@ -150,11 +150,23 @@ ${questionLines}`, explanation });
         return pool;
       }
 
-      const taskPool = buildTaskPool(50);
+      const taskPool = buildTaskPool(80);
 
       const ROUND_COUNT = 7;
       function shuffle(array) { const a = array.slice(); for (let i = a.length - 1; i > 0; i -= 1) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-      let tasks = shuffle(taskPool).slice(0, ROUND_COUNT);
+      function pickSessionTasks() {
+        const used = new Set();
+        const session = [];
+        for (const t of shuffle(taskPool)) {
+          const words = t.question.split("\n").slice(1);
+          if (words.some((w) => used.has(w))) continue;
+          words.forEach((w) => used.add(w));
+          session.push(t);
+          if (session.length === ROUND_COUNT) break;
+        }
+        return session.length === ROUND_COUNT ? session : shuffle(taskPool).slice(0, ROUND_COUNT);
+      }
+      let tasks = pickSessionTasks();
 
       let current = 0;
       let answers = new Array(tasks.length).fill(null);
@@ -242,7 +254,7 @@ ${questionLines}`, explanation });
         }
       });
       restartButton.addEventListener("click", () => {
-        tasks = shuffle(taskPool).slice(0, ROUND_COUNT);
+        tasks = pickSessionTasks();
         current = 0;
         answers = new Array(tasks.length).fill(null);
         checked = new Array(tasks.length).fill(false);
