@@ -4,7 +4,9 @@ export const CREATOR_KEY = 'examix_creator_id';
 export const USER_KEY = 'examix_user_id';
 
 export function normalizeCode(value = '') {
-  return String(value).trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const map = { 'А':'A','В':'B','С':'C','Е':'E','Н':'H','К':'K','М':'M','О':'O','Р':'P','Т':'T','Х':'X','У':'Y' };
+  const transliterated = String(value).trim().toUpperCase().split('').map((ch) => map[ch] || ch).join('');
+  return transliterated.replace(/[^A-Z0-9]/g, '');
 }
 
 export function getUserId() {
